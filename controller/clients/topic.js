@@ -1,7 +1,7 @@
-const Topic = require('../model/topic');
+const Topic = require('../../model/topic');
 module.exports.create  = async (req, res) => {
     const formbody =  req.body
-    if(fomrbody){
+    if(formbody){
         const topic = new Topic({formbody})
         await topic.save()
         res.redirect("/clients/topic")
@@ -27,7 +27,7 @@ module.exports.update = async (req, res) => {
         console.log("không nhận đc data")
     }
 }
-modulexx.exports.delete = async (req, res) => {
+module.exports.delete = async (req, res) => {
     const id = req.params.id
     if(id){
         await Topic.updateOne({_id: id}, {status: "inactive"})

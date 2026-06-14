@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const singleModel = new mongoose.Schema({
+const singerSchema = new mongoose.Schema({
     fullName : String,
     avatar : String,
     status : String,
@@ -12,5 +12,5 @@ const singleModel = new mongoose.Schema({
 },{
     timestamps : true
 })
-const Singer = mongoose.model("Singer",singleModel,"singers");
+const Singer = mongoose.model("Singer",singerSchema,"singers");
 module.exports = Singer;
