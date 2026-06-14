@@ -1,0 +1,354 @@
+.header{
+    background: #202020;
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+.header .container-fluid{
+    margin-right: auto;
+    margin-left: auto;
+    width: 100%;
+    max-width: 1140px;
+}
+
+.header .inner-logo a{
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+}
+.header .inner-logo:hover a{
+    background: #6bf958;
+    color: #202020;
+    padding: 7px;
+    display: inline;
+    border-radius: 10px;
+    transition: 0.5s;
+}
+
+/* End Header */
+
+.body .sider{
+    width: 150px;
+    background:#202020;
+    color: #fff;
+    height: calc(100vh - 56px);
+    position: fixed;
+    top: 56px;
+    left : 0
+}
+ 
+.body .main{
+    position: relative;
+    margin: 15px;
+    left: 150px;
+    width: calc(100% - 180px);
+}
+
+.body .main table{
+    width: auto;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+.body .main table td, th {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* End body */
+.sider .inner-menu ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.sider .inner-menu ul li a{
+    color: #fff;
+    border-bottom: 1px solid #515151;
+    display: block;
+    padding: 6px 10px;
+}
+/* --- Khung Footer chung --- */
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(24, 24, 24, 0.98); 
+    backdrop-filter: blur(10px);
+    border-top: 1px solid #2b2b2b;
+    padding: 12px 20px;
+    z-index: 9999;
+    color: #fff;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.6);
+}
+
+/* --- Khối bên trái: Căn chỉnh text và avatar --- */
+.inner-avatar img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border: 2px solid #444;
+    animation: rotateCover 10s linear infinite;
+    animation-play-state: paused;
+}
+
+.inner-info {
+    line-height: 1.4;
+}
+
+.inner-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: #3498db; /* Màu xanh mượt hơn */
+    margin: 0;
+}
+
+.inner-actions {
+    font-size: 12px;
+    color: #888 !important;
+    margin-top: 2px;
+}
+
+/* --- Khối ở giữa: Đè lại CSS APlayer chuẩn chỉnh --- */
+#aplayer {
+    background: transparent !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    border: none !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Thay vì ẩn hoàn toàn cụm chứa nút, ta chỉ ẩn ảnh nền */
+#aplayer .aplayer-pic {
+    background-image: none !important;
+    background-color: transparent !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Hiện lại nút Play/Pause và chỉnh màu trắng/sáng */
+#aplayer .aplayer-pic .aplayer-button {
+    position: static !important;
+    margin: 0 !important;
+    width: 32px !important;
+    height: 32px !important;
+    opacity: 0.9;
+    background: rgba(250, 250, 250, 0.2) !important; /* Vòng tròn mờ bọc quanh nút play */
+    border: 1px solid #fff !important;
+}
+
+#aplayer .aplayer-pic .aplayer-button:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+#aplayer .aplayer-pic .aplayer-button svg path {
+    fill: #fff !important; /* Đổi icon play/pause thành màu trắng */
+}
+
+/* Căn giữa phần thanh bar thời gian bên phải cụm nút play */
+#aplayer .aplayer-info {
+    margin-left: 15px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    width: 100%;
+}
+
+/* Ẩn text title mặc định bị trùng lặp của Aplayer */
+#aplayer .aplayer-info .aplayer-music {
+    display: none !important;
+}
+
+/* Định dạng thanh Progress Bar và các nút âm lượng, lặp bài */
+#aplayer .aplayer-info .aplayer-controller {
+    display: flex !important;
+    align-items: center !important;
+    width: 100%;
+}
+
+#aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap {
+    margin: 0 15px !important; /* Khoảng cách 2 bên thanh tiến trình */
+}
+
+#aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar {
+    background: #333 !important; /* Nền thanh nhạc chưa chạy */
+    height: 4px !important; /* Làm thanh nhạc mảnh, tinh tế giống NCT */
+    border-radius: 2px;
+}
+
+#aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar .aplayer-loaded {
+    background: #444 !important; /* Thanh đã load dữ liệu */
+    height: 4px !important;
+}
+
+#aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar .aplayer-played {
+    background: #3498db !important; /* Thanh đã phát, trùng màu xanh title */
+    height: 4px !important;
+}
+
+/* Các nút volume, loop đổi sang màu xám sáng, hover trắng */
+#aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon path {
+    fill: #aaa !important;
+}
+#aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon:hover path {
+    fill: #fff !important;
+}
+
+/* --- Khối bên phải --- */
+.inner-time {
+    color: #888 !important;
+    font-size: 13px;
+}
+
+/* Keyframe đĩa nhạc xoay */
+@keyframes rotateCover {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+/* --- ĐÈ LẠI TOÀN BỘ CSS CỦA APLAYER ĐỂ LIỀN MẠCH TRÊN 1 HÀNG --- */
+#aplayer {
+    background: transparent !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    border: none !important;
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+}
+
+/* 1. Khung chứa nút Play/Pause */
+#aplayer .aplayer-pic {
+    background-image: none !important;
+    background-color: transparent !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important; /* Không cho nút bị bóp méo */
+}
+
+/* Định dạng lại nút Play tròn */
+#aplayer .aplayer-pic .aplayer-button {
+    position: static !important; /* Phá vỡ absolute cũ */
+    margin: 0 !important;
+    width: 34px !important;
+    height: 34px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.7) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    cursor: pointer;
+}
+
+#aplayer .aplayer-pic .aplayer-button svg {
+    width: 16px !important;
+    height: 16px !important;
+    position: static !important; /* Bỏ căn giữa absolute của gốc */
+    margin: 0 !important;
+}
+
+#aplayer .aplayer-pic .aplayer-button svg path {
+    fill: #fff !important;
+}
+
+/* 2. Khung chứa phần thanh tiến trình và cụm thời gian */
+#aplayer .aplayer-info {
+    margin-left: 15px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+}
+
+/* Ẩn text tên bài hát gốc của Aplayer */
+#aplayer .aplayer-info .aplayer-music {
+    display: none !important;
+}
+
+/* 3. ĐƯA THANH TIẾN TRÌNH VÀ ICON VỀ CHUNG HÀNG */
+#aplayer .aplayer-info .aplayer-controller {
+    display: flex !important;
+    flex-direction: row !important; /* Ép buộc xếp hàng ngang */
+    align-items: center !important;
+    width: 100% !important;
+}
+
+/* Cấu hình lại thanh Timeline (Trọng tâm lỗi ở đây) */
+#aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap {
+    margin: 0 20px 0 10px !important;
+    padding: 0 !important;
+    flex-grow: 1 !important; /* Ép thanh nhạc giãn hết cỡ chiếm không gian trống */
+    cursor: pointer !important;
+}
+
+#aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar {
+    background: #333 !important;
+    height: 4px !important;
+    border-radius: 2px !important;
+}
+
+#aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar .aplayer-loaded {
+    background: #444 !important;
+    height: 4px !important;
+}
+
+#aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar .aplayer-played {
+    background: #3498db !important;
+    height: 4px !important;
+}
+
+/* Điểm tròn kéo vị trí bài hát */
+#aplayer .aplayer-info .aplayer-controller .aplayer-bar-wrap .aplayer-bar .aplayer-played .aplayer-thumb {
+    background: #3498db !important;
+    transform: scale(0.8) !important;
+}
+
+/* 4. Cụm hiển thị thời gian và các nút Volume/Loop */
+#aplayer .aplayer-info .aplayer-controller .aplayer-time {
+    display: flex !important;
+    align-items: center !important;
+    color: #aaa !important;
+    font-size: 13px !important;
+    flex-shrink: 0 !important; /* Giữ nguyên kích thước cụm icon */
+}
+
+/* Khoảng cách chữ thời gian */
+#aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-time-inner {
+    margin-right: 15px !important;
+}
+
+/* Chỉnh các icon âm lượng, lặp lại */
+#aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 20px !important;
+    height: 20px !important;
+    margin-left: 8px !important;
+}
+
+#aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon path {
+    fill: #aaa !important;
+}
+
+#aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon:hover path {
+    fill: #fff !important;
+}
+
+/* Thanh chỉnh volume nhanh khi hover */
+#aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-volume-wrap .aplayer-volume-bar-wrap {
+    bottom: 25px !important; /* Đẩy thanh volume dọc lên trên không bị che */
+    background: #222 !important;
+    border: 1px solid #444 !important;
+}
