@@ -10,6 +10,6 @@ router.get("/otp",controller.otp)
 router.post("/otp",controller.otpPost)
 router.get("/forgotPw",controller.forgot)
 router.post("/forgotPw",controller.fotgotPs)
-router.get("/reset",controller.resetPw)
+router.get("/resetPw",controller.reset)
 router.post("/resetPw",controller.resetPw)
 module.exports = router

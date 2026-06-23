@@ -103,7 +103,7 @@ module.exports.fotgotPs = async (req, res) => {
         const otpobj = {
             email: email,
             otp: otp,
-            op: "register",
+            op: "forgotPw",
             expireAt: Date.now() + 3 * 60 * 1000
         };
         const forgot = new ForgotPsw(otpobj);
@@ -112,7 +112,7 @@ module.exports.fotgotPs = async (req, res) => {
         const html = `Mã OTP để xác minh tài khoản : <b>${otp}</b>. Thời hạn 3 phút`;
         await sendEmail.sendMail(email, subject, html);
         res.redirect(`/auth/otp?email=${email}&op=forgotPw`);
-    }catch(error){
+    } catch (error) {
         req.flash("error", "đã xảy ra lỗi vui lòng thử lại")
         res.redirect("/auth/forgotPw")
     }
@@ -135,37 +135,37 @@ module.exports.otpPost = async (req, res) => {
             const register = await ForgotPsw.find({
                 email: email,
                 op: "register"
-            })
-            if (otp === register.at(-1).otp) {
-                req.flash("success", "mã hợp lệ")
+            });
+            const lastOtpRecord = register.at(-1);
+            if (lastOtpRecord && otp === lastOtpRecord.otp) {
+                req.flash("success", "mã hợp lệ");
                 const user = await User.findOne({
-                    email : email,
-                    status : "inactive"
-                })
-                if(!user){
+                    email: email,
+                    status: "inactive"
+                });
+                if (!user) {
                     req.flash("error", "Không tìm thấy người dùng");
                     return res.redirect("/auth/login");
                 }
                 const tokenS = await jwtToken.tokenUser(user.id);
-                const tokenUs = ramdom.ramdomToken(20)
-                await User.updateOne({id : user.id},{
-                    tokenUser : tokenUs,
-                    status : "active",
-                    expireAt : null
-                })
+                const tokenUs = ramdom.ramdomToken(20);
+                await User.findByIdAndUpdate(user.id, {
+                    tokenUser: tokenUs,
+                    status: "active",
+                    expireAt: null
+                });
                 res.cookie("tokenUser", tokenS, {
                     httpOnly: true,
                     secure: false,
                     maxAge: 24 * 60 * 60 * 1000
                 });
                 return res.redirect("/");
-            }
-            else {
-                req.flash("error", "vui lòng lấy mã otp mới nhất")
-                res.redirect(`/auth/opt?email=${email}&op=${op}`)
+            } else {
+                req.flash("error", "vui lòng lấy mã otp mới nhất");
+                return res.redirect(`/auth/opt?email=${email}&op=${op}`);
             }
         case 'forgotPw':
-            const fotgot = await ForgotPsw.find({
+            const forgot = await ForgotPsw.find({
                 email: email,
                 op: "forgotPw",
             })
@@ -175,11 +175,11 @@ module.exports.otpPost = async (req, res) => {
             }
             if (otp === forgot.at(-1).otp) {
                 const user = await User.findOne({
-                    email : email,
-                    status : "active"
+                    email: email,
+                    status: "active"
                 })
-                if(!user){
-                    req.flash("error","tài khoản không tồn tại");
+                if (!user) {
+                    req.flash("error", "tài khoản không tồn tại");
                     return res.redirect("/auth/otp")
                 }
                 const tokenS = jwtToken.tokenUser(user.id);
@@ -197,29 +197,35 @@ module.exports.otpPost = async (req, res) => {
             }
     }
 }
-module.exports.reset = async (req,res)=>{
-    res.render("clients/Page/auth/reset",{
-        pagetitle : "reset password"
+module.exports.reset = async (req, res) => {
+    res.render("clients/Page/auth/reset", {
+        pagetitle: "reset password"
     })
 }
-module.exports.resetPw = async (req,res)=>{
-    const password = req.body.password
-    const confirmPassword = req.body.confirmPassword
-    const tokenUser = req.cookie.tokenUser
-    if(password === confirmPassword){
-        const hspass = await hashps.passwordHasign(password)
-        const user = await User.findOne({
-            tokenUser : tokenUser
-        })
-        if(!user){
-            req.flash("error","tài khoản không tồn tại")
-            return res.redirect("/auth/resetPw")
-        }
-        await User.updateOne({tokenUser : tokenUser},{password : hspass})
-        return res.redirect("/")
+module.exports.resetPw = async (req, res) => {
+    const password = req.body.password;
+    const confirmPassword = req.body.confirmPassword;
+    const decoded = jwtToken.vetifyTk(req.cookies.tokenUser);
+    if (!decoded || !decoded.userId) {
+        req.flash("error", "hết phiên");
+        return res.redirect("/auth/login");
     }
-    else{
-        req.flash("error","mật khẩu không trùng khớp")
-        return res.redirect("/auth/reset")
+    const idUser = decoded.userId;
+    if (password === confirmPassword) {
+        const hspass = await hashps.passwordHasign(password);
+        const user = await User.findById(idUser);
+        if (!user) {
+            req.flash("error", "tài khoản không tồn tại");
+            return res.redirect("/auth/resetPw");
+        }
+        const newTokenUser = ramdom.ramdomToken(20);
+        await User.findByIdAndUpdate(idUser, { 
+            password: hspass,
+            tokenUser: newTokenUser
+        });
+        return res.redirect("/");
+    } else {
+        req.flash("error", "mật khẩu không trùng khớp");
+        return res.redirect("/auth/reset");
     }
 }
