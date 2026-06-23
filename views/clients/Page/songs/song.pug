@@ -1,0 +1,25 @@
+extends ../../Layout/index.pug
+
+block main
+  section.song-list-section
+    div.song-list-header
+      div.col-index #
+      div.col-title Tiêu đề
+      div.col-uploader Người đăng
+      div.col-artist Nghệ sĩ
+      div.col-time
+        i.fa-regular.fa-clock //
+    div.song-list-body
+      each song, index in songs
+        div.song-item(data-song-id=song.id)
+          div.col-index #{index + 1}
+          div.col-title
+            div.song-thumb
+              img(src=song.avatar, alt=song.title)
+            span.song-name= song.title
+          div.col-uploader
+            if song.uploaderAvatar
+              img.uploader-thumb(src=song.uploaderAvatar, alt=song.uploader)
+            span.uploader-name= song.uploader
+          div.col-artist= song.singer
+          div.col-time= song.duration || "03:00"

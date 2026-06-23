@@ -12,5 +12,5 @@ const singerSchema = new mongoose.Schema({
 },{
     timestamps : true
 })
-const Singer = mongoose.model("Singer",singerSchema,"singers");
+const Singer = mongoose.model("singer",singerSchema,"singer");
 module.exports = Singer;

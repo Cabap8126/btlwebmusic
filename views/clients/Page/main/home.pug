@@ -1,0 +1,12 @@
+extends ../../Layout/index.pug
+block main
+  section.topic-section
+    div.topic-header
+      h2.topic-title Chủ Đề
+
+    div.topic-grid
+      each topic in topics
+        a.topic-card(href=`/topic/${topic.id}`)
+          span.card-text= topic.title
+          div.card-thumb
+            img(src=topic.avatar, alt=topic.title)

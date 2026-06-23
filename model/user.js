@@ -9,6 +9,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "active"
     },
+    expireAt:{
+        type : Date,
+        default : Date.now(),
+        index: {expires : '5m'}
+    }
+    ,
     role: String,
     tokenUser: {
         type: String,
@@ -29,10 +35,10 @@ const userSchema = new mongoose.Schema({
             songId: String,
             name: String,
         }
-    ]
+    ],
 }, {
-    timestamps: true
+    timestamps: true,
 });
 
-const User = mongoose.model("User", userSchema, "users");
+const User = mongoose.model("user", userSchema, "user");
 module.exports = User;

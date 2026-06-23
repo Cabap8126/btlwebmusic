@@ -1,28 +1,29 @@
-footer.footer
-  .container-fluid
-    .row.align-items-center
-      //- Khối 1: Thông tin bài hát (Bên trái) - Căn giữa hàng, thêm class nội dung
-      .col-md-3.col-sm-12.d-flex.align-items-center.gap-3
-        .inner-avatar
-          img(src="https://picsum.photos/id/10/50/50", alt="cover", class="rounded-circle")
-        .inner-info.d-flex.flex-column.justify-content-center
-          .inner-title nhạc
-          .inner-actions.d-flex.align-items-center.gap-2.text-muted.small
-            span.inner-singer 
-              i.fa-solid.fa-microphone-lines.me-1
-              | tên
-            span.inner-sub-action |
-            span.inner-topic 
-              i.fa-solid.fa-music.me-1
-              | tiêu đề
+footer.footer-player.fixed-bottom
+  .player-left
+    #footer-song-info.d-flex.align-items-center.gap-3
+      .song-thumb
+        img(src="/images/default-song.jpg" alt="")
+      .song-info
+        .song-title Chưa chọn bài hát
+        .song-artist
 
-      //- Khối 2: Trình phát APlayer (Ở giữa)
-      .col-md-6.col-sm-12
-        .inner-play
-          #aplayer(audio=audio)
+      .song-actions
+        button.btn-icon
+          i.fa-regular.fa-heart
+        button.btn-icon
+          i.fa-solid.fa-ellipsis
 
-      //- Khối 3: Tính năng phụ hoặc thời gian (Bên phải)
-      .col-md-3.d-none.d-md-flex.align-items-center.justify-content-end
-        .inner-time.text-muted.small
-          i.fa-regular.fa-clock.me-1
-          | 08/12/2006
+  .player-center
+    #aplayer
+
+  .player-right
+    span.badge-quality 128 kbps
+
+    button.btn-icon
+      i.fa-solid.fa-volume-high
+
+    button.btn-icon
+      i.fa-solid.fa-microphone
+
+    button.btn-icon
+      i.fa-solid.fa-bars

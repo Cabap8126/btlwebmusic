@@ -29,5 +29,5 @@ const songSchema = new mongoose.Schema(
         timestamps : true
     }
 )
-const Song = mongoose.model("Song",songSchema,"songs")
+const Song = mongoose.model("song",songSchema,"song")
 module.exports = Song;
