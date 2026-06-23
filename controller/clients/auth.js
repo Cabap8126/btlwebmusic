@@ -56,14 +56,12 @@ module.exports.registerPs = async (req, res) => {
                 return res.redirect("/auth/register")
             }
         } else {
-            const token = ramdom.ramdomToken(20)
             const hspass = await hashps.passwordHasign(password)
             const newUser = new User({
-                fullname: name,
+                name: name,
                 email: email,
                 password: hspass,
                 status: "inactive",
-                tokenUser : token
             });
             await newUser.save();
         }
@@ -140,18 +138,21 @@ module.exports.otpPost = async (req, res) => {
             })
             if (otp === register.at(-1).otp) {
                 req.flash("success", "mã hợp lệ")
-                const updatedUser = await User.findOneAndUpdate(
-                    { email: email },
-                    {
-                        status: "active",
-                        expireAt: null
-                    }, { new: true } // new trả về dữ liệu mới ngay sau khi cập nhập
-                );
-                if (!updatedUser) {
+                const user = await User.findOne({
+                    email : email,
+                    status : "inactive"
+                })
+                if(!user){
                     req.flash("error", "Không tìm thấy người dùng");
                     return res.redirect("/auth/login");
                 }
-                const tokenS = jwtToken.tokenUser(updatedUser.tokenUser);
+                const tokenS = await jwtToken.tokenUser(user.id);
+                const tokenUs = ramdom.ramdomToken(20)
+                await User.updateOne({id : user.id},{
+                    tokenUser : tokenUs,
+                    status : "active",
+                    expireAt : null
+                })
                 res.cookie("tokenUser", tokenS, {
                     httpOnly: true,
                     secure: false,
@@ -174,13 +175,14 @@ module.exports.otpPost = async (req, res) => {
             }
             if (otp === forgot.at(-1).otp) {
                 const user = await User.findOne({
-                    email : email
+                    email : email,
+                    status : "active"
                 })
                 if(!user){
                     req.flash("error","tài khoản không tồn tại");
                     return res.redirect("/auth/otp")
                 }
-                const tokenS = jwtToken.tokenUser(user.tokenUser);
+                const tokenS = jwtToken.tokenUser(user.id);
                 res.cookie("tokenUser", tokenS, {
                     httpOnly: true,
                     secure: false,
@@ -194,7 +196,6 @@ module.exports.otpPost = async (req, res) => {
                 return res.redirect("/auth/otp");
             }
     }
-    res.send("oke")
 }
 module.exports.reset = async (req,res)=>{
     res.render("clients/Page/auth/reset",{
