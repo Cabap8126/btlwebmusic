@@ -8,7 +8,7 @@ block main
         .row.justify-content-center 
             .col-8 
                 h1(class="text-center" ) Xác Nhận Mật Khẩu Mới
-                form(action="/user/password/reset" method="POST")
+                form(action="/auth/resetPw" method="POST")
                     div(class="form-group")
                         label(for="password") Mật Khẩu
                         input(type="password" id="password" name="password" class="form-control" required)

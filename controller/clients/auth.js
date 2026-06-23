@@ -56,12 +56,14 @@ module.exports.registerPs = async (req, res) => {
                 return res.redirect("/auth/register")
             }
         } else {
+            const token = ramdom.ramdomToken(20)
             const hspass = await hashps.passwordHasign(password)
             const newUser = new User({
                 fullname: name,
                 email: email,
                 password: hspass,
-                status: "inactive"
+                status: "inactive",
+                tokenUser : token
             });
             await newUser.save();
         }
@@ -81,6 +83,40 @@ module.exports.registerPs = async (req, res) => {
     } catch (error) {
         req.flash("error", "Á à m fake mail à")
         res.redirect("/auth/register")
+    }
+}
+module.exports.forgot = async (req, res) => {
+    res.render("clients/Page/auth/forgotpassword", {
+        pagetitle: "Quên mật khẩu"
+    })
+}
+module.exports.fotgotPs = async (req, res) => {
+    try {
+        const email = req.body.email
+        const user = await User.findOne({
+            email: email,
+            status: "active"
+        })
+        if (!user) {
+            req.flash("error", "tài khoản không tồn tại")
+            return res.redirect("/auth/forgotPw")
+        }
+        const otp = ramdom.ramdomNumber(8);
+        const otpobj = {
+            email: email,
+            otp: otp,
+            op: "register",
+            expireAt: Date.now() + 3 * 60 * 1000
+        };
+        const forgot = new ForgotPsw(otpobj);
+        await forgot.save()
+        const subject = "Mã otp xác minh tài khoản";
+        const html = `Mã OTP để xác minh tài khoản : <b>${otp}</b>. Thời hạn 3 phút`;
+        await sendEmail.sendMail(email, subject, html);
+        res.redirect(`/auth/otp?email=${email}&op=forgotPw`);
+    }catch(error){
+        req.flash("error", "đã xảy ra lỗi vui lòng thử lại")
+        res.redirect("/auth/forgotPw")
     }
 }
 module.exports.otp = async (req, res) => {
@@ -115,6 +151,7 @@ module.exports.otpPost = async (req, res) => {
                     req.flash("error", "Không tìm thấy người dùng");
                     return res.redirect("/auth/login");
                 }
+                const tokenS = jwtToken.tokenUser(updatedUser.tokenUser);
                 res.cookie("tokenUser", tokenS, {
                     httpOnly: true,
                     secure: false,
@@ -126,6 +163,62 @@ module.exports.otpPost = async (req, res) => {
                 req.flash("error", "vui lòng lấy mã otp mới nhất")
                 res.redirect(`/auth/opt?email=${email}&op=${op}`)
             }
+        case 'forgotPw':
+            const fotgot = await ForgotPsw.find({
+                email: email,
+                op: "forgotPw",
+            })
+            if (!forgot) {
+                req.flash("error", "otp không tồn tại hoặc đã hết hạn")
+                return res.redirect("/auth/otp");
+            }
+            if (otp === forgot.at(-1).otp) {
+                const user = await User.findOne({
+                    email : email
+                })
+                if(!user){
+                    req.flash("error","tài khoản không tồn tại");
+                    return res.redirect("/auth/otp")
+                }
+                const tokenS = jwtToken.tokenUser(user.tokenUser);
+                res.cookie("tokenUser", tokenS, {
+                    httpOnly: true,
+                    secure: false,
+                    maxAge: 24 * 60 * 60 * 1000
+                });
+                req.flash("success", "opt hợp lệ")
+                return res.redirect("/auth/resetPw");
+            }
+            else {
+                req.flash("error", "otp khong hop le hoac da he han");
+                return res.redirect("/auth/otp");
+            }
     }
     res.send("oke")
+}
+module.exports.reset = async (req,res)=>{
+    res.render("clients/Page/auth/reset",{
+        pagetitle : "reset password"
+    })
+}
+module.exports.resetPw = async (req,res)=>{
+    const password = req.body.password
+    const confirmPassword = req.body.confirmPassword
+    const tokenUser = req.cookie.tokenUser
+    if(password === confirmPassword){
+        const hspass = await hashps.passwordHasign(password)
+        const user = await User.findOne({
+            tokenUser : tokenUser
+        })
+        if(!user){
+            req.flash("error","tài khoản không tồn tại")
+            return res.redirect("/auth/resetPw")
+        }
+        await User.updateOne({tokenUser : tokenUser},{password : hspass})
+        return res.redirect("/")
+    }
+    else{
+        req.flash("error","mật khẩu không trùng khớp")
+        return res.redirect("/auth/reset")
+    }
 }
