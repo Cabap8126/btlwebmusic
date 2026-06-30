@@ -10,6 +10,10 @@ module.exports.login = async (req, res) => {
         pagetile: "trang đăng nhập"
     })
 }
+module.exports.logout = async ( req,res)=>{
+    res.clearCookie("tokenUser")
+    res.redirect("/")
+}
 module.exports.loginpost = async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -21,7 +25,7 @@ module.exports.loginpost = async (req, res) => {
         req.flash('error', "Email hoặc mật khẩu không chính xác");
         return res.redirect(`/auth/login`);
     }
-    const checkPassword = hashps.checkPassword(password, user.password);
+    const checkPassword = hashps.checkpassword(password, user.password);
     if (!checkPassword) {
         req.flash("error", "Email hoặc mật khẩu không chính xác");
         return res.redirect(`/auth/login`);
@@ -42,7 +46,7 @@ module.exports.register = async (req, res) => {
 module.exports.registerPs = async (req, res) => {
     try {
         const email = req.body.email;
-        const name = req.body.fullname;
+        const name = req.body.fullName;
         const password = req.body.password;
         const isMail = await checkEmail.checkemail(email)
         if (!isMail) {

@@ -1,0 +1,55 @@
+extends ../../Layout/index.pug
+block main
+  if (user.favorit && user.favorite.length > 0)
+    .playlist-detail-container
+      .playlist-detail-header
+        .playlist-cover-wrapper
+          img(src="/images/playlist-cover.jpg", alt="Playlist Cover")
+          .heart-overlay
+            i.fa.fa-heart
+        .playlist-detail-info
+          span.playlist-type Playlist • #{user.favorite.length} Bài hát
+          h1.playlist-title Yêu thích của #{user.name ? user.name : "helo"}
+          p.playlist-artists #{songs[0].fullName ? songs[0].fullName : "ca sĩ"}
+          .playlist-actions
+            button.btn-action-icon: i.fa.fa-heart
+            button.btn-action-icon: i.fa.fa-share
+            button.btn-action-icon: i.fa.fa-ellipsis-h
+          .playlist-buttons
+            button.btn-play-all
+              i.fa.fa-play
+              span Phát tất cả
+            button.btn-download
+              i.fa.fa-download
+              span Tải về
+      .songs-table
+        .table-header
+          .col-index #
+          .col-title Tiêu đề
+          .col-uploader Người đăng
+          .col-artist Nghệ sĩ
+          .col-duration: i.fa.fa-clock-o
+        each song,index in songs
+          .table-body
+            .song-row
+              .col-index #{index + 1}
+              .col-title
+                .song-thumb
+                  img(src=(song.avatar ? song.avatar : "/images/song-thumb.jpg"), alt="Song Thumb")
+                span.song-name #{song.title ? song.title : "Tên nhạc"}
+              .col-uploader
+                .uploader-avatar
+                  img(src="/images/uploader.jpg", alt="Uploader")
+                span.uploader-name #{song.fullName ? song.fullName : "Ca sĩ"}
+              .col-artist #{song.fullName ? song.fullName : "Ca sĩ"}
+              .col-duration 04:46
+  else
+      .uploads-empty-container
+        h1.uploads-title Đã tải lên
+        .uploads-tabs
+          span.tab-item.active Bài hát
+        .uploads-empty-content
+          .empty-icon-wrapper
+            // Bạn có thể thay đường dẫn ảnh icon cái hộp ở đây
+            img(src="/images/notdata.png", alt="Empty Box") 
+          p.empty-text Chưa có nội dung đã tải lên

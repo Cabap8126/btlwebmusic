@@ -1,0 +1,41 @@
+extends ../../Layout/index.pug
+block main
+  .profile-container
+    .profile-header
+      .profile-avatar
+        img(src="/images/avatar.png", alt="Avatar")
+      .profile-info
+        h2.profile-name #{user.name ? user.name : "hello"}
+        span.profile-badge Miễn phí
+        .profile-stats
+          span Đang theo dõi • 0
+          span Người theo dõi • 0
+      .profile-logot
+        a(href="/auth/logout" class="btn-login") đăng xuất
+    .profile-tabs
+      .tab-item.tab-favorite
+        .tab-icon
+          i.fa.fa-heart 
+        .tab-content
+          h3 Yêu Thích
+          p 1 bài hát
+      .tab-item.tab-recent
+        .tab-icon
+          i.fa.fa-history
+        .tab-content
+          h3 Nghe gần đây
+          p 50 bài hát
+      .tab-item.tab-uploaded
+        .tab-icon
+          i.fa.fa-upload
+        .tab-content
+          h3 Đã tải lên
+          p 0 bài hát • 0 video
+    .profile-playlists
+      .playlist-header
+        h2 Playlist đã tạo (1)
+        button.btn-add-playlist + 
+      .playlist-list
+        .playlist-item
+          .playlist-thumb
+            img(src="/images/logo.png", alt="Playlist Cover")

@@ -12,6 +12,9 @@ header.header
     .header-right
         button.icon-btn
             i.fa-solid.fa-arrow-up-from-bracket
-        img.avatar(src="/images/avatar.png")
+        if(user)
+            img.avatar(src="/images/avatar.png")
+        else
+            a(href="/auth/login" class="btn-login") đăng nhập 
         button.icon-btn
             i.fa-solid.fa-gear
